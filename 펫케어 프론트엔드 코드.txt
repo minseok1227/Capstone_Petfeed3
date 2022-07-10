@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>나만의 강아지 정보</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    .nav{
+      height: 65px;
+      border-bottom: 1px solid black;
+      display: flex;
+      align-items: center;
+      
+    }
+
+    .nav-right-items{
+      display: flex;
+      margin-left: auto;
+    }
+    
+    .nav-item{
+      margin-left: 10px;
+    }
+
+    .company-name{
+      margin-left: 20px;
+    }
+
+    .title{  
+      text-align: center;
+      font-size: 3.5rem;
+      font-weight: bold;
+    }
+
+    .main{
+      width: 800px;
+      margin: 0 auto;
+      margin-top: 60px;
+    }
+
+    .information-item{
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      border-radius: 4px;
+      
+    }
+
+    .infor-item{
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      border-radius: 4px;
+    }
+
+    .infor2-item{
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      border-radius: 4px;
+    }
+
+    .infor{
+      display: flex;
+    }
+
+    .infor2{
+      display: flex;
+    }
+
+    .information{
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="company name">
+      Comprehensive care device
+    </div>
+  
+    <div class = "nav-right-items">
+     <div class = "nav-item">[훈련 방법]   </div>
+     <div class = "nav-item"> [밥을 안먹을때]</div>
+     </div>
+
+  </div>
+  
+ <div class="main">
+    <div class = "title">
+      My ppoppi information
+    </div>
+ 
+    
+    <div class="information">
+    <div class="information-item">
+       
+     </div>
+     <div class="information-item">
+      1일차
+     </div>
+     <div class="information-item">
+      2일차
+     </div>
+     <div class="information-item">
+      3일차
+     </div>
+     <div class="information-item">
+      4일차
+     </div>
+     <div class="information-item">
+      5일차
+     </div>
+     <div class="information-item">
+      6일차
+     </div>
+     <div class="information-item">
+      7일차
+     </div>  
+    </div>
+
+     
+   <div class="infor">
+     <div class="infor-item">
+      날짜,요일
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+     <div class="infor-item">
+      
+     </div>
+   </div>
+     
+   <div class="infor2">
+     <div class="infor2-item">
+      먹이 유무
+     </div>
+
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+     <div class="infor2-item">
+       
+     </div>
+
+     
+ </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
