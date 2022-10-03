@@ -1,4 +1,5 @@
 import cv2
+import sys
 import RPi.GPIO as GPIO
 import dht11
 from mscoco_label_map import category_map
