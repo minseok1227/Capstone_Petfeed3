@@ -1,0 +1,29 @@
+<html>
+	 <table border ="1" width="50%" height=200 bgcolor=#11a9c1 bordercolor="white" cellspacing="5">
+      <tr align="center" bgcolor="white">
+        <td rowspan="2"> {{today}} </td>
+        <td> Breakfast </td>
+        <td> Lunch </td>
+        <td> Dinner </td>
+      </tr>
+
+      <tr align="center" bgcolor="white">
+        <td> {{breakfast}} </td>
+        <td> {{lunch}} </td>
+        <td> {{dinner}} </td>
+      </tr>
+      <tr align="center" bgcolor="white">
+        <td colspan="4">
+          온습도 측정
+        </td>
+      </tr>
+          <tr align="center" bgcolor="white">
+        <td> 온도 : {{temp1}} </td>
+        <td rowspan="2"> {{ OkorNot }} </td>
+      </tr>
+         </tr>
+          <tr align="center" bgcolor="white">
+        <td> 습도 : {{humid1}} </td>
+      </tr>
+    </table>
+</html>
