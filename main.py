@@ -32,7 +32,6 @@ GPIO.setmode(GPIO.BCM)
 servo_pin = 12
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm = GPIO.PWM(servo_pin, 50)
-pwm.start(3.0) #서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
 timeA = 0.6
 
 # read data using pin 14
@@ -43,7 +42,7 @@ net = cv2.dnn.readNetFromTensorflow(
     'ssd_mobilenet_v2_frozen_inference_graph.pb', 'ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
 
 if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1) & (now1 < today10past1pm)) or ((today10to5pm < now1) & (now1 < today10past6pm)):
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('videos/24.mp4')
     while cap.isOpened():
         ret, img = cap.read()
 
@@ -84,6 +83,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                         time.sleep(1)
                         print(sec)
                         if sec == 5:
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -92,6 +92,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                             time.sleep(timeA)
                         breakfast = True
                         if sec == 15:
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -105,6 +106,8 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                         sec = sec + 1
                         time.sleep(1)
                         if sec == 5:
+
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -113,6 +116,8 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                             time.sleep(timeA)
                             lunch = True
                         if sec == 15:
+
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -127,6 +132,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                         sec = sec + 1
                         time.sleep(1)
                         if sec == 5:
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -135,6 +141,8 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                             time.sleep(timeA)
                             dinner = True
                         if sec == 15:
+
+                            pwm.start(3.0)  # 서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨.
                             pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
                             time.sleep(timeA)  # 서보 모터가 이동할 시간을 줌
                             pwm.ChangeDutyCycle(5.5)  # 서보 모터를 45도로 회전(이동)
@@ -173,7 +181,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                                           temp1=result.temperature, humid1=result.humidity, OkorNot="X")
 
             if __name__ == "__main__":  # 웹사이트를 호스팅하여 접속자에게 보여주기 위한 부분
-                app.run(host="0.0.0.0", port="8080")
+                app.run(host="192.168.137.227", port="5000")
                 # host는 현재 라즈베리파이의 내부 IP, port는 임의로 설정
                  # 해당 내부 IP와 port를 포트포워딩 해두면 외부에서도 접속가능
             sec = 0
