@@ -15,7 +15,7 @@ today10past10am = now1.replace(hour=11, minute=10, second=0, microsecond=0)
 today10to12pm = now1.replace(hour=11, minute=50, second=0, microsecond=0)
 today10past1pm = now1.replace(hour=13, minute=10, second=0, microsecond=0)
 today10to5pm = now1.replace(hour=15, minute=50, second=0, microsecond=0)
-today10past6pm = now1.replace(hour=18, minute=10, second=0, microsecond=0)
+today10past6pm = now1.replace(hour=23, minute=57, second=0, microsecond=0)
 
 referenceUnit = 1
 sec = 0
@@ -31,13 +31,14 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 servo_pin = 12
 GPIO.setup(servo_pin, GPIO.OUT)
+GPIO.setup(17, GPIO.IN)
 pwm = GPIO.PWM(servo_pin, 50)
 pwm.start(3.0)
  #서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨
 
 # read data using pin 14
-instance = dht11.DHT11(pin=14)
-result = instance.read()
+instance = dht11.DHT11(pin=17)
+
 
 net = cv2.dnn.readNetFromTensorflow(
     'ssd_mobilenet_v2_frozen_inference_graph.pb', 'ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
@@ -76,10 +77,10 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
         today12pm = now.replace(hour=12, minute=0, second=0, microsecond=0)
         today1pm = now.replace(hour=13, minute=0, second=0, microsecond=0)
         today5pm = now.replace(hour=17, minute=0, second=0, microsecond=0)
-        today6pm = now.replace(hour=18, minute=0, second=0, microsecond=0)
+        today6pm = now.replace(hour=23, minute=55, second=0, microsecond=0)
 
         if (idx == 17 or idx == 18) & (today9am < now) & (today10am > now):
-            d = datetime.now().date
+            d = datetime.today().strftime('%Y-%m-%d')
             while True:
                 sec = sec + 1
                 time.sleep(1)
@@ -96,15 +97,16 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
                 if sec == 30:
+                    result = instance.read()
                     @app.route('/')  # 기본 주소
                     def home():
-                        if result.is_valid() & result.temperature < 30 & result.humidity < 70:
+                        if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
                             return render_template('index2.html', today=d, breakfast="O", temp1=result.temperature, humid1=result.humidity, OkorNot = "O")
-                        if result.is_valid() & (result.temperature >= 30 or result.humidity >= 70):
+                        if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
                             return render_template('index2.html', today=d, breakfast="O", temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d.strftime("%Y년 %m월 %d일"), breakfast="O", temp1="cannot inspect",
+                            return render_template('index2.html', today=d, breakfast="O", temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
 
@@ -116,7 +118,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
             break
 
         if (idx == 17 or idx == 18) & (today12pm < now) & (today1pm > now):
-            d = datetime.now().date
+            d = datetime.today().strftime('%Y-%m-%d')
             while True:
                 sec = sec + 1
                 time.sleep(1)
@@ -132,11 +134,12 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
                 if sec == 30:
+                    result = instance.read()
                     @app.route('/')  # 기본 주소
                     def home():
-                        if result.is_valid() & result.temperature < 30 & result.humidity < 70:
+                        if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
                             return render_template('index2.html', today=d, breakfast="O", lunch = "O", temp1=result.temperature, humid1=result.humidity, OkorNot = "O")
-                        if result.is_valid() & (result.temperature >= 30 or result.humidity >= 70):
+                        if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
                             return render_template('index2.html', today=d, breakfast="O", lunch = "O", temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
@@ -153,7 +156,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
 
 
         if (idx == 17 or idx == 18) & (today5pm < now) & (today6pm > now):
-            d = datetime.datetime.now()
+            d = datetime.today().strftime('%Y-%m-%d')
             while True:
                 sec = sec + 1
                 time.sleep(1)
@@ -169,11 +172,12 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
                 if sec == 30:
+                    result = instance.read()
                     @app.route('/')  # 기본 주소
                     def home():
-                        if result.is_valid() & result.temperature < 30 & result.humidity < 70:
+                        if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
                             return render_template('index2.html', today=d, breakfast="O", lunch = "O", dinner = "O", temp1=result.temperature, humid1=result.humidity, OkorNot = "O")
-                        if result.is_valid() & (result.temperature >= 30 or result.humidity >= 70):
+                        if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
                             return render_template('index2.html', today=d, breakfast="O", lunch = "O", dinner = "O", temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
