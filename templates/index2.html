@@ -117,7 +117,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">{{today}}</th>
             <th scope="col">아침</th>
             <th scope="col">점심</th>
             <th scope="col">저녁</th>
@@ -126,9 +126,12 @@
         <tbody>
           <tr>
             <th scope="row">급식여부</th>
-            <td>{{breakfast}}</td>
-            <td>{{lunch}}</td>
-            <td>{{dinner}}</td>
+            <td>{{% if breakfast < 10 %}} O
+            {{% elif breakfast >= 10%}} X</td>
+             <td>{{% if lunch < 10 %}} O
+            {{% elif breakfast >= 10%}} X</td>
+             <td>{{% if dinner < 10 %}} O
+            {{% elif breakfast >= 10%}} X</td>>
           </tr>
 
           <table class="table">
@@ -155,7 +158,6 @@
                   </tr>
         </tbody>
       </table>
-
     </main>
   </div>
 </div>
