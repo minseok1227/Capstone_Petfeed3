@@ -38,7 +38,7 @@ today10past1pm = now1.replace(hour=13, minute=10, second=0, microsecond=0)
 today10to5pm = now1.replace(hour=15, minute=50, second=0, microsecond=0)
 today10past6pm = now1.replace(hour=23, minute=57, second=0, microsecond=0)
 
-referenceUnit = 1
+referenceUnit = 100
 sec = 0
 
 breakfast = 0
