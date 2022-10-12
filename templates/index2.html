@@ -126,12 +126,15 @@
         <tbody>
           <tr>
             <th scope="row">급식여부</th>
-            <td>{{% if breakfast < 10 %}} O
-            {{% elif breakfast >= 10%}} X</td>
-             <td>{{% if lunch < 10 %}} O
-            {{% elif breakfast >= 10%}} X</td>
-             <td>{{% if dinner < 10 %}} O
-            {{% elif breakfast >= 10%}} X</td>>
+            <td>{% if breakfast < 10 %} O
+            {% else %} X
+            {% endif %}</td>
+             <td>{% if lunch < 10 %} O
+            {% else %} X
+             {% endif %}</td>
+             <td>{% if dinner < 10 %} O
+            {% else %} X
+             {% endif %}</td>
           </tr>
 
           <table class="table">

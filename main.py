@@ -2,7 +2,6 @@ import cv2
 import sys
 import RPi.GPIO as GPIO
 import dht11
-from hx711 import HX711
 from mscoco_label_map import category_map
 from datetime import datetime
 import time
@@ -12,6 +11,21 @@ BLOB_SIZE = 300
 THRESHOLD = 0.3
 
 EMULATE_HX711=False
+
+if not EMULATE_HX711:
+    from hx711 import HX711
+else:
+    from emulated_hx711 import HX711
+
+def cleanAndExit():
+    print("Cleaning...")
+
+    if not EMULATE_HX711:
+        GPIO.cleanup()
+
+    print("Bye!")
+    sys.exit()
+
 
 referenceUnit = 1
 
@@ -27,13 +41,13 @@ today10past6pm = now1.replace(hour=23, minute=57, second=0, microsecond=0)
 referenceUnit = 1
 sec = 0
 
-global breakfast
-global lunch
-global dinner
-global breakfastDone
-global lunchDone
-global dinnerDone
-global weight
+breakfast = 0
+lunch = 0
+dinner = 0
+breakfastDone = 0
+lunchDone = 0
+dinnerDone = 0
+weight = 0
 
 app = Flask(__name__)
 
@@ -59,7 +73,7 @@ pwm.start(3.0)
 # read data using pin 14
 instance = dht11.DHT11(pin=17)
 
-hx = HX711(5, 6)
+hx = HX711(21, 18)
 hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(113)
 hx.reset()
@@ -82,7 +96,6 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
 
         boxes, scores, classes = [], [], []
 
-        val = hx.get_weight(5)
 
         # 모터2 ON
 
@@ -125,19 +138,19 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
-                if sec == 300:
+                if sec == 30:
                     result = instance.read()
-                    breakfastDone = val
+                    breakfastDone = hx.get_weight(5)
                     @app.route('/')  # 기본 주소
                     def home():
                         if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
-                            return render_template('index2.html', today=d, breakfast=val, temp1=result.temperature,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="O")
                         if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
-                            return render_template('index2.html', today=d, breakfast=val, temp1=result.temperature,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d, breakfast=val, temp1="cannot inspect",
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
                     if __name__ == "__main__":  # 웹사이트를 호스팅하여 접속자에게 보여주기 위한 부분
@@ -163,21 +176,21 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
-                if sec == 300:
+                if sec == 30:
                     result = instance.read()
-                    lunchDone = val
+                    lunchDone = hx.get_weight(5)
                     @app.route('/')  # 기본 주소
                     def home():
                         if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=val,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
                                                    temp1=result.temperature, humid1=result.humidity, OkorNot="O")
                         if result.is_valid() & (
                                 (result.temperature >= 30) or (result.humidity >= 70)):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=val,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
                                                    temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=val,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
                                                    temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
@@ -194,6 +207,7 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
             while True:
                 sec = sec + 1
                 time.sleep(1)
+                print(hx.get_weight(5))
                 if sec == 5:
                     pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
@@ -205,18 +219,18 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
                     time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
                     pwm.stop()
-                if sec == 300:
+                if sec == 30:
                     result = instance.read()
-                    dinnerDone = val
+                    dinnerDone = hx.get_weight(5)
                     @app.route('/')  # 기본 주소
                     def home():
                         if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = val, temp1=result.temperature, humid1=result.humidity, OkorNot = "O")
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = dinnerDone, temp1=result.temperature, humid1=result.humidity, OkorNot = "O")
                         if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = val, temp1=result.temperature,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = dinnerDone, temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = val, temp1="cannot inspect",
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch = lunchDone, dinner = dinnerDone, temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
                     if __name__ == "__main__":  # 웹사이트를 호스팅하여 접속자에게 보여주기 위한 부분
@@ -245,7 +259,6 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
             # 모터2 OFF
             sec = 0
             break
-
 
 
 
