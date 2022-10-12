@@ -75,7 +75,7 @@ instance = dht11.DHT11(pin=17)
 
 hx = HX711(21, 18)
 hx.set_reading_format("MSB", "MSB")
-hx.set_reference_unit(113)
+hx.set_reference_unit(234)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
