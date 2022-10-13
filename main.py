@@ -48,6 +48,7 @@ breakfastDone = 0
 lunchDone = 0
 dinnerDone = 0
 weight = 0
+motorcycle = 0
 
 app = Flask(__name__)
 
@@ -65,12 +66,10 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 servo_pin = 12
 GPIO.setup(servo_pin, GPIO.OUT)
-GPIO.setup(17, GPIO.IN)
 pwm = GPIO.PWM(servo_pin, 50)
-pwm.start(3.0)
  #서보의 0도 위치(0.6ms)이동:값 3.0은 pwm주기인 20ms의 3%를 의미하므로,0.6ms됨
 
-# read data using pin 14
+# read data using pin 17
 instance = dht11.DHT11(pin=17)
 
 hx = HX711(21, 18)
@@ -128,16 +127,20 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                 time.sleep(1)
                 print(sec)
                 if sec == 5:
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
+                    print(hx.get_weight(5))
+                    pwm.start(3.0)  # 서보모터를 0도로 회전(이동)
+                    time.sleep(1)  # 서보 모터가 이동할 시간을 줌
                     pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                if sec == 15:
-                    pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.stop()
+                    time.sleep(1)
+                    while True:
+                        if hx.get_weight(5) > 46:
+                            pwm.start(7.5)  # 서보 모터를 90도로 회전(이동)
+                            time.sleep(1)  # 서보 모터가 이동할 시간을 줌
+                            pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
+                            time.sleep(1)
+                            pwm.stop()
+                            break
+
                 if sec == 30:
                     result = instance.read()
                     breakfastDone = hx.get_weight(5)
@@ -163,19 +166,26 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
         if (idx == 17 or idx == 18) & (today12pm < now) & (today1pm > now):
             d = datetime.today().strftime('%Y-%m-%d')
             while True:
+                result = instance.read()
+                print("Temperature: %-3.1f C" % result.temperature)
+                print("Humidity: %-3.1f %%" % result.humidity)
                 sec = sec + 1
                 time.sleep(1)
                 if sec == 5:
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
+                    print(hx.get_weight(5))
+                    pwm.start(3.0)  # 서보모터를 0도로 회전(이동)
+                    time.sleep(1)  # 서보 모터가 이동할 시간을 줌
                     pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                if sec == 15:
-                    pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.stop()
+                    time.sleep(1)
+                    while True:
+                        if hx.get_weight(5) > 46:
+                            pwm.start(7.5)  # 서보 모터를 90도로 회전(이동)
+                            time.sleep(1)  # 서보 모터가 이동할 시간을 줌
+                            pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
+                            time.sleep(1)
+                            pwm.stop()
+                            break
+
                 if sec == 30:
                     result = instance.read()
                     lunchDone = hx.get_weight(5)
@@ -207,18 +217,22 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
             while True:
                 sec = sec + 1
                 time.sleep(1)
-                print(hx.get_weight(5))
+                print(sec)
                 if sec == 5:
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
+                    pwm.start(3.0)  # 서보모터를 0도로 회전(이동)
+                    time.sleep(1)  # 서보 모터가 이동할 시간을 줌
                     pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                if sec == 15:
-                    pwm.ChangeDutyCycle(7.5)  # 서보 모터를 90도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
-                    time.sleep(1.0)  # 서보 모터가 이동할 시간을 줌
-                    pwm.stop()
+                    time.sleep(1)
+                    while True:
+                        if hx.get_weight(5) > 46:
+                            pwm.start(7.5)  # 서보 모터를 90도로 회전(이동)
+                            time.sleep(1)  # 서보 모터가 이동할 시간을 줌
+                            pwm.ChangeDutyCycle(3.0)  # 서보모터를 0도로 회전(이동)
+                            time.sleep(1)
+                            pwm.stop()
+                            break
+
+
                 if sec == 30:
                     result = instance.read()
                     dinnerDone = hx.get_weight(5)
