@@ -166,9 +166,6 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
         if (idx == 17 or idx == 18) & (today12pm < now) & (today1pm > now):
             d = datetime.today().strftime('%Y-%m-%d')
             while True:
-                result = instance.read()
-                print("Temperature: %-3.1f C" % result.temperature)
-                print("Humidity: %-3.1f %%" % result.humidity)
                 sec = sec + 1
                 time.sleep(1)
                 if sec == 5:
@@ -231,7 +228,6 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                             time.sleep(1)
                             pwm.stop()
                             break
-
 
                 if sec == 30:
                     result = instance.read()
