@@ -32,7 +32,7 @@ referenceUnit = 1
 now1 = datetime.now()
 today0am = now1.replace(hour=0, minute=0, second=0, microsecond=0)
 today10to9am = now1.replace(hour=8, minute=50, second=0, microsecond=0)
-today10past10am = now1.replace(hour=10, minute=10, second=0, microsecond=0)
+today10past10am = now1.replace(hour=11, minute=30, second=0, microsecond=0)
 today10to12pm = now1.replace(hour=11, minute=50, second=0, microsecond=0)
 today10past1pm = now1.replace(hour=13, minute=10, second=0, microsecond=0)
 today10to5pm = now1.replace(hour=15, minute=50, second=0, microsecond=0)
@@ -147,13 +147,13 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     @app.route('/')  # 기본 주소
                     def home():
                         if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1=result.temperature,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=1000, dinner=1000, temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="O")
                         if result.is_valid() & ((result.temperature >= 30) or (result.humidity >= 70)):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1=result.temperature,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=1000, dinner=1000, temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, temp1="cannot inspect",
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=1000, dinner=1000, temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
                     if __name__ == "__main__":  # 웹사이트를 호스팅하여 접속자에게 보여주기 위한 부분
@@ -189,15 +189,15 @@ if ((today10to9am < now1) & (now1 < today10past10am)) or ((today10to12pm < now1)
                     @app.route('/')  # 기본 주소
                     def home():
                         if result.is_valid() & (result.temperature < 30) & (result.humidity < 70):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone, dinner=1000,
                                                    temp1=result.temperature, humid1=result.humidity, OkorNot="O")
                         if result.is_valid() & (
                                 (result.temperature >= 30) or (result.humidity >= 70)):
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone, dinner=1000,
                                                    temp1=result.temperature,
                                                    humid1=result.humidity, OkorNot="X")
                         if not result.is_valid():
-                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone,
+                            return render_template('index2.html', today=d, breakfast=breakfastDone, lunch=lunchDone, dinner=1000,
                                                    temp1="cannot inspect",
                                                    humid1="cannot inspect", OkorNot="X")
 
